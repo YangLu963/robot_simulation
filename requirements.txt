@@ -1,0 +1,24 @@
+# ===== 基础环境 =====
+python>=3.9,<3.12  # PyBullet对3.13+支持不完善
+numpy>=1.21
+scipy>=1.9
+
+# ===== 物理仿真 =====
+pybullet>=3.2.6  # 必须用conda安装: conda install -c conda-forge pybullet
+
+# ===== 多模态处理 =====
+torch>=2.0.0  # 核心框架
+transformers>=4.40.0  # 文本编码（如BERT）
+timm>=0.9.0  # 视觉编码（如ViT）
+opencv-python>=4.5  # 图像预处理
+Pillow>=9.0  # 图像加载
+
+# ===== 强化学习 =====
+gym>=0.21
+stable-baselines3>=2.0.0  # SAC算法实现
+tensorboard>=2.12  # 训练监控
+
+# ===== 工具类 =====
+tqdm>=4.0  # 进度条
+jsonlines>=3.0.0  # 处理annotations.jsonl
+pyyaml>=6.0  # 解析config文件conda activate robot_env

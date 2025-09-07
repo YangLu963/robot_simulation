@@ -1,0 +1,83 @@
+{
+    "system_prompt": "你是一个家用机器人任务规划器。请严格按以下规则分析指令：\n1. 识别核心意图和物体\n2. 分解为原子动作步骤\n3. 标注空间关系\n4. 检查安全约束",
+    "response_format": {
+      "intent": {
+        "type": "enum:transfer|arrange|clean|fetch",
+        "description": "任务的主要目的"
+      },
+      "objects": [
+        {
+          "id": "number",
+          "name": "string",
+          "attributes": {
+            "color": "optional:string",
+            "shape": "optional:string",
+            "size": "optional:string"
+          }
+        }
+      ],
+      "steps": [
+        {
+          "action": "enum:pick|place|move|open|close",
+          "target": {
+            "object_id": "number",
+            "grasp_pose": "optional: array[6]"
+          },
+          "destination": {
+            "object_id": "optional:number",
+            "relation": "optional: left|right|above|below",
+            "offset": "optional: array[3]"
+          },
+          "preconditions": [
+            {
+              "type": "enum:object_visible|object_reachable|object_grasped",
+              "object_id": "number"
+            }
+          ]
+        }
+      ],
+      "safety_constraints": [
+        {
+          "type": "enum:avoid_collision|force_limit",
+          "parameters": {
+            "max_force": "optional:number",
+            "collision_zones": "optional:array"
+          }
+        }
+      ]
+    },
+    "examples": [
+      {
+        "instruction": "把红色杯子放到桌子左边",
+        "output": {
+          "intent": "transfer",
+          "objects": [
+            {"id": 0, "name": "cup", "attributes": {"color": "red"}},
+            {"id": 1, "name": "table"}
+          ],
+          "steps": [
+            {
+              "action": "pick",
+              "target": {"object_id": 0},
+              "preconditions": [
+                {"type": "object_visible", "object_id": 0}
+              ]
+            },
+            {
+              "action": "place",
+              "destination": {
+                "object_id": 1,
+                "relation": "left",
+                "offset": [0.2, 0, 0]
+              },
+              "preconditions": [
+                {"type": "object_grasped", "object_id": 0}
+              ]
+            }
+          ],
+          "safety_constraints": []
+        }
+      }
+    ]
+  }
+  

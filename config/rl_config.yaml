@@ -1,0 +1,28 @@
+rl:
+  policy:
+    type: "sac"
+    gamma: 0.99
+    tau: 0.005
+    alpha: 0.2
+    lr: 3e-4
+    batch_size: 256
+    hidden_dim: 512
+    buffer_size: 100000
+    train_interval: 4
+    
+  obs_space:
+    rgb_shape: [224, 224, 3]
+    depth_shape: [224, 224]
+    joint_dim: 7
+    task_encoding_dim: 15  # action_types(5) + max_objects(10)
+    
+  action_space:
+    dim: 7
+    low: [-1.0, -1.0, -1.0, -3.14, -3.14, -3.14, -0.5]
+    high: [1.0, 1.0, 1.0, 3.14, 3.14, 3.14, 0.5]
+    clip: true
+    
+  env:
+    max_episode_steps: 500
+    reward_scale: 1.0
+    success_threshold: 0.95
