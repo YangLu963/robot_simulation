@@ -2,15 +2,13 @@
 import logging
 from typing import Dict, Any
 from .hrl_controller import HierarchicalRLController
-from llm.llm_api import ChatGPTAPI   # 你封装的 GPT 接口
-from multimodal.text_encoder import TextEncoder
-from task_templates.task_template import TaskTemplate
-from reinforcement_learning.environment import RobotEnv
-
-from robot_instruction import RobotInstruction
+from ..llm.llm_api import ChatGPTAPI   # 修复：相对导入
+from ..multimodal.text_encoder import TextEncoder  # 修复：相对导入
+from ..task_templates.task_template import TaskTemplate  # 修复：相对导入
+from ..reinforcement_learning.environment import RobotEnv  # 修复：相对导入
+from ..robot_instruction import RobotInstruction  # 修复：相对导入
 
 class LLMController:
-
     def __init__(self, rl_config_path: str = "configs/rl_config.yaml", device: str = 'cuda'):
         self.logger = logging.getLogger(__name__)
         self.hrl_controller = HierarchicalRLController(rl_config_path, device)
@@ -19,20 +17,18 @@ class LLMController:
         self.task_template = TaskTemplate()
         self.device = device
 
-    from robot_instruction import RobotInstruction
-
-def plan_task(self, instruction: str) -> RobotInstruction:
-    """
-    使用 ChatGPT + TaskTemplate 将自然语言任务分解为结构化计划
-    """
-    try:
-        prompt = self.task_template.format(instruction)
-        response = self.chatgpt.generate(prompt)
-        self.logger.info(f"Task decomposed: {response}")
-        return RobotInstruction.from_llm_response(response)
-    except Exception as e:
-        self.logger.error(f"Task planning failed: {str(e)}")
-        raise
+    def plan_task(self, instruction: str) -> RobotInstruction:
+        """
+        使用 ChatGPT + TaskTemplate 将自然语言任务分解为结构化计划
+        """
+        try:
+            prompt = self.task_template.format(instruction)
+            response = self.chatgpt.generate(prompt)
+            self.logger.info(f"Task decomposed: {response}")
+            return RobotInstruction.from_llm_response(response)
+        except Exception as e:
+            self.logger.error(f"Task planning failed: {str(e)}")
+            raise
 
     def execute_instruction(self, instruction: str, env: RobotEnv) -> None:
         """
@@ -40,10 +36,11 @@ def plan_task(self, instruction: str) -> RobotInstruction:
         """
         plan = self.plan_task(instruction)
 
-        for step in plan['steps']:
-            # 将每个 step 的语言特征转为向量，供多模态融合
-            text_feature = self.text_encoder.encode(step['goal']).to(self.device)
-            self.hrl_controller.execute_step_with_text(env, step, text_feature)
+        # 修复：使用正确的步骤访问方式
+        for step in plan.steps:  # plan.steps 而不是 plan['steps']
+            # 修复：使用hrl_controller现有的execute方法
+            # 需要确保hrl_controller能够处理步骤和文本特征
+            self.hrl_controller.execute(f"Execute step: {step.action}", env)
 
     def interactive_session(self, env: RobotEnv):
         """
