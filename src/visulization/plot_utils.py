@@ -39,6 +39,11 @@ def plot_training_history(history_path: Path, save_path: Path = None):
 
 def visualize_instruction_stats(data_dir: Path):
     """Visualize statistics about robot instructions."""
+    # 修复：添加父目录到Python路径
+    import sys
+    from pathlib import Path
+    sys.path.append(str(Path(__file__).parent.parent))
+    
     from src.data.data_loader import RobotInstructionDataset
     
     dataset = RobotInstructionDataset(data_dir, 'train')
