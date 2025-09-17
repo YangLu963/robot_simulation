@@ -1,6 +1,6 @@
 fusion:
-  visual_feat_dim: 256  # 改为与代码一致
-  text_feat_dim: 256    # 改为与代码一致
+  visual_feat_dim: 256  
+  text_feat_dim: 256    
   hidden_dim: 512
   num_heads: 8
 
