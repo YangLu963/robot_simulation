@@ -8,9 +8,11 @@ class CrossModalAttention(nn.Module):
         self.vision_proj = nn.Sequential(
             nn.Linear(embed_dim, embed_dim),
             nn.LayerNorm(embed_dim)
+        )  
         self.text_proj = nn.Sequential(
             nn.Linear(embed_dim, embed_dim),
-            nn.LayerNorm(embed_dim))
+            nn.LayerNorm(embed_dim)
+        )  
         
         self.attention = nn.MultiheadAttention(
             embed_dim=embed_dim,
@@ -22,10 +24,6 @@ class CrossModalAttention(nn.Module):
         self.norm = nn.LayerNorm(embed_dim)
 
     def forward(self, visual_feats, text_feats, text_mask=None):
-        # 输入维度:
-        # visual_feats: [B, N, D]
-        # text_feats: [B, L, D]
-        # text_mask: [B, L]
         
         q = self.vision_proj(visual_feats)
         k = self.text_proj(text_feats)
@@ -38,6 +36,5 @@ class CrossModalAttention(nn.Module):
             key_padding_mask=text_mask
         )
         
-        # 残差连接+LayerNorm
         output = self.norm(visual_feats + self.dropout(attn_output))
-        return output, attn_weight)
+        return output, attn_weights  
