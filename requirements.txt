@@ -4,7 +4,7 @@ numpy>=1.21
 scipy>=1.9
 
 # ===== 物理仿真 =====
-pybullet>=3.2.6
+pybullet>=3.2.6  # 可以通过pip安装，无需conda
 
 # ===== 深度学习框架 =====
 torch>=2.0.0
@@ -15,26 +15,26 @@ transformers>=4.40.0
 timm>=0.9.0
 opencv-python>=4.5
 Pillow>=9.0
-einops>=0.7.0  # 新增：用于fusion_network
+einops>=0.7.0
 
 # ===== 强化学习 =====
 gym>=0.21
 gym-notices>=0.0.8
 
 # ===== 数据序列化 =====
-pydantic>=2.0.0  # 新增：用于robot_instruction
+pydantic>=2.0.0
 pyyaml>=6.0
 jsonlines>=3.0.0
 
 # ===== LLM和API =====
-openai>=1.0.0  # 新增：用于ChatGPT API
-tiktoken>=0.5.0  # 新增：token计数
+openai>=1.0.0
+tiktoken>=0.5.0
 
 # ===== 工具类 =====
 tqdm>=4.0
-matplotlib>=3.7.0  # 新增：用于plot_utils
-seaborn>=0.12.0  # 新增：用于可视化
+matplotlib>=3.7.0
+seaborn>=0.12.0
 
-# ===== 开发工具 =====
+# ===== 开发工具（可选） =====
 ipython>=8.0
 jupyter>=1.0
