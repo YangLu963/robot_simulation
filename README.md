@@ -56,14 +56,15 @@ project_root/
 │ ├── download_models.sh # Download pre-trained models
 │ ├── evaluate.py # Model evaluation script
 │ └── deploy.py # Model deployment script (to ONNX)
-├── notebooks/
-│ └── analysis.ipynb # Data analysis & visualization Notebook
 ├── models/
 │ └── llm_planner/
-│ └── task_templates.json # LLM task templates
+│ └── task_templates.py # LLM task templates
+└── multimodal_fusion.py
 ├── requirements.txt # Python dependencies
 ├── LICENSE # MIT License
 └── README.md # Project description
+└── .DS_Store
+
 
 text
 
