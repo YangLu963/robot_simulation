@@ -18,20 +18,17 @@ class PyBulletRobotEnv(gym.Env):
         p.setAdditionalSearchPath(pybullet_data.getDataPath())
         p.setGravity(0, 0, -9.8)
 
-        # 载入平面和机器人
         self.plane_id = p.loadURDF("plane.urdf")
         robot_path = os.path.join(pybullet_data.getDataPath(), "kuka_iiwa/model.urdf")
         self.robot_id = p.loadURDF(robot_path, useFixedBase=True)
 
-        # 初始化数据保存目录
         self.img_dir = "data/images"
         os.makedirs(self.img_dir, exist_ok=True)
-        self.step_idx = 0  # 用于图像命名
+        self.step_idx = 0
 
-        # 获取关节数量
         self.num_joints = p.getNumJoints(self.robot_id)
 
-        # Gym 空间定义
+        # 保持原有关节状态观测空间
         self.observation_space = gym.spaces.Box(
             low=-np.pi, high=np.pi, shape=(self.num_joints,), dtype=np.float32
         )
@@ -46,6 +43,9 @@ class PyBulletRobotEnv(gym.Env):
         """捕获并保存当前视角的RGB图像"""
         width, height = 224, 224
         _, _, rgbImg, _, _ = p.getCameraImage(width=width, height=height)
+        # 修复：确保RGB格式（去除alpha通道）
+        if rgbImg.shape[2] == 4:  # RGBA格式
+            rgbImg = rgbImg[:, :, :3]  # 转换为RGB
         img = Image.fromarray(rgbImg)
         path = os.path.join(self.img_dir, f"{self.step_idx}.png")
         img.save(path)
@@ -61,7 +61,6 @@ class PyBulletRobotEnv(gym.Env):
     def step(self, action):
         self.step_count += 1
         
-        # 执行动作
         for j in range(self.num_joints):
             current_pos = p.getJointState(self.robot_id, j)[0]
             target_pos = current_pos + float(action[j]) * 0.05
@@ -74,15 +73,13 @@ class PyBulletRobotEnv(gym.Env):
             )
         p.stepSimulation()
 
-        # 保存当前图像
         image_path = self.render_image()
         self.step_idx += 1
 
-        # 返回观测和奖励
         obs = self._get_obs()
         reward = -np.linalg.norm(obs)
         done = self.step_count >= self.max_steps
-        info = {"image_path": image_path}  # 可选：将图像路径传递给外部
+        info = {"image_path": image_path}
 
         return obs, reward, done, info
 
@@ -92,3 +89,9 @@ class PyBulletRobotEnv(gym.Env):
     def render(self, mode="human"):
         if not self.render_mode:
             print("Environment created in DIRECT mode. Restart with render=True to see GUI.")
+        return None  # 修复：添加返回值
+
+    def close(self):
+        """释放PyBullet连接"""
+        if hasattr(self, 'physicsClient'):
+            p.disconnect(self.physicsClient)
