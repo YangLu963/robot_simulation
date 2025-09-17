@@ -1,24 +1,40 @@
 # ===== 基础环境 =====
-python>=3.9,<3.12  # PyBullet对3.13+支持不完善
+python>=3.9
 numpy>=1.21
 scipy>=1.9
 
 # ===== 物理仿真 =====
-pybullet>=3.2.6  # 必须用conda安装: conda install -c conda-forge pybullet
+pybullet>=3.2.6
+
+# ===== 深度学习框架 =====
+torch>=2.0.0
+torchvision>=0.15.0
 
 # ===== 多模态处理 =====
-torch>=2.0.0  # 核心框架
-transformers>=4.40.0  # 文本编码（如BERT）
-timm>=0.9.0  # 视觉编码（如ViT）
-opencv-python>=4.5  # 图像预处理
-Pillow>=9.0  # 图像加载
+transformers>=4.40.0
+timm>=0.9.0
+opencv-python>=4.5
+Pillow>=9.0
+einops>=0.7.0  # 新增：用于fusion_network
 
 # ===== 强化学习 =====
 gym>=0.21
-stable-baselines3>=2.0.0  # SAC算法实现
-tensorboard>=2.12  # 训练监控
+gym-notices>=0.0.8
+
+# ===== 数据序列化 =====
+pydantic>=2.0.0  # 新增：用于robot_instruction
+pyyaml>=6.0
+jsonlines>=3.0.0
+
+# ===== LLM和API =====
+openai>=1.0.0  # 新增：用于ChatGPT API
+tiktoken>=0.5.0  # 新增：token计数
 
 # ===== 工具类 =====
-tqdm>=4.0  # 进度条
-jsonlines>=3.0.0  # 处理annotations.jsonl
-pyyaml>=6.0  # 解析config文件conda activate robot_env
+tqdm>=4.0
+matplotlib>=3.7.0  # 新增：用于plot_utils
+seaborn>=0.12.0  # 新增：用于可视化
+
+# ===== 开发工具 =====
+ipython>=8.0
+jupyter>=1.0
