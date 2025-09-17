@@ -5,7 +5,7 @@ llm:
   max_tokens: 1024
   max_retries: 3
   timeout: 30
-  task_templates_path: "models/llm_planner/task_templates_v2.json"
+  task_templates_path: "models/llm_planner/task_template.py"  
   safety_checks:
     max_steps: 10
     allowed_actions: ["pick", "place", "move", "open", "close"]
