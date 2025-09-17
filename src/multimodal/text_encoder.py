@@ -10,6 +10,8 @@ class TextEncoder(nn.Module):
         self.device = device
 
     def forward(self, text):
+        if isinstance(text, str):
+            text = [text]
         inputs = self.tokenizer(
             text,
             return_tensors="pt",
