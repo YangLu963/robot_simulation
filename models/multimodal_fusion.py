@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from einops import rearrange
 
 class MultimodalFusionNetwork(nn.Module):
     def __init__(self, 
@@ -46,28 +45,29 @@ class MultimodalFusionNetwork(nn.Module):
     def forward(self, visual_feats, text_feats, text_mask=None):
         """
         输入:
-            visual_feats: [B, N, D_v] 视觉特征 (N=196 for ViT)
-            text_feats: [B, L, D_t] 文本特征
+            visual_feats: [B, N, D_v] 视觉特征
+            text_feats: [B, L, D_t] 文本特征  
             text_mask: [B, L] 文本padding掩码
         输出:
-            action: [B, 4] (动作类型概率)
             pose: [B, 6] (3D位置+旋转)
+            attention_weights: 注意力权重
+            fusion_gate: 融合门控值
         """
         # 特征投影
-        v_proj = self.visual_proj(visual_feats)  # [B, N, D_h]
-        t_proj = self.text_proj(text_feats)      # [B, L, D_h]
+        v_proj = self.visual_proj(visual_feats)
+        t_proj = self.text_proj(text_feats)
         
-        # 跨模态注意力 (视觉作为Query)
+        # 跨模态注意力
         attn_output, _ = self.cross_attn(
             query=v_proj,
             key=t_proj,
             value=t_proj,
             key_padding_mask=text_mask
-        )  # [B, N, D_h]
+        )
         
         # 特征池化
-        visual_global = torch.mean(attn_output, dim=1)  # [B, D_h]
-        text_global = torch.mean(t_proj, dim=1)        # [B, D_h]
+        visual_global = torch.mean(attn_output, dim=1)
+        text_global = torch.mean(t_proj, dim=1)
         
         # 门控融合
         gate = self.gate(torch.cat([visual_global, text_global], dim=-1))
@@ -93,7 +93,7 @@ class MultitaskHead(nn.Module):
         self.regression_head = nn.Sequential(
             nn.Linear(input_dim, 256),
             nn.ReLU(),
-            nn.Linear(256, 6)  # 3D position + rotation
+            nn.Linear(256, 6)
         )
 
     def forward(self, x):
