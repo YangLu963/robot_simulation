@@ -1,19 +1,14 @@
-# config/fusion_config.yaml
-# Multimodal Fusion Network Configuration
-# This config is used by src/multimodal/multimodal_fusion.py
-
 fusion:
-  visual_feat_dim: 768  # From ViT base
-  text_feat_dim: 768    # From BERT base
-  hidden_dim: 512       # Hidden dimension for projection layers
-  num_heads: 8          # Number of attention heads
+  visual_feat_dim: 256  # 改为与代码一致
+  text_feat_dim: 256    # 改为与代码一致
+  hidden_dim: 512
+  num_heads: 8
 
-  # Output head configuration (aligns with sac.py action space)
   output:
-    pose_dim: 6         # 6DoF grasp pose [x, y, z, rot_x, rot_y, rot_z]
-    action_dim: 5       # Number of action types: ["pick", "place", "move", "open", "close"]
+    pose_dim: 6
+    action_dim: 5
 
 training:
-  batch_size: 64        # Training batch size
-  learning_rate: 1e-4   # Learning rate for fusion network
-  temperature: 0.07     # For contrastive loss
+  batch_size: 64
+  learning_rate: 1e-4
+  temperature: 0.07
