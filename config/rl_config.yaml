@@ -11,10 +11,8 @@ rl:
     train_interval: 4
     
   obs_space:
-    rgb_shape: [224, 224, 3]
-    depth_shape: [224, 224]
-    joint_dim: 7
-    task_encoding_dim: 15  # action_types(5) + max_objects(10)
+    # 改为与实际环境一致
+    state_dim: 7  # 只有关节状态
     
   action_space:
     dim: 7
